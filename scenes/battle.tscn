@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://nc7x8ee28quq"]
+
+[ext_resource type="Script" uid="uid://dui5bqamnfrib" path="res://scenes/battle.gd" id="1"]
+[ext_resource type="Script" uid="uid://dgx6uuypaq7s6" path="res://scripts/deck_manager.gd" id="2"]
+[ext_resource type="Script" uid="uid://dxi537v03biwu" path="res://scenes/battle_ui.gd" id="2_th188"]
+
+[node name="Battle" type="Control" unique_id=1251322143]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1")
+
+[node name="BattleUI" type="Control" parent="." unique_id=1451042210]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_th188")
+
+[node name="BackButton" type="Button" parent="BattleUI" unique_id=1031454749]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="EndTurnButton" type="Button" parent="BattleUI" unique_id=1937049463]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="PlayerHP" type="Label" parent="BattleUI" unique_id=1603531244]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="EnemyHP" type="Label" parent="BattleUI" unique_id=498126601]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="EnemyIntention" type="Label" parent="BattleUI" unique_id=850939031]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="BattleLog" type="Label" parent="BattleUI" unique_id=402028412]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="HandContainer" type="HBoxContainer" parent="BattleUI" unique_id=30345019]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2")

@@ -16,7 +16,16 @@ var map_ui
 
 func _ready() -> void:
     set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-    _build_map()
+    # Если карта уже создавалась, восстанавливаем её, а не генерируем заново.
+    if GameData.map_nodes.is_empty():
+        _build_map()
+        GameData.map_nodes = map_nodes.duplicate(true)
+        GameData.map_connections = connections.duplicate(true)
+        GameData.current_map_node = -1
+    else:
+        map_nodes = GameData.map_nodes.duplicate(true)
+        connections = GameData.map_connections.duplicate(true)
+        current_node = GameData.current_map_node
 
     map_ui = MapUI.new()
     map_ui.name = "MapUI"
@@ -99,11 +108,14 @@ func _on_node_pressed(index: int) -> void:
 
     current_node = index
     map_nodes[index]["visited"] = true
+    # Сохраняем выбранную точку и отметку посещения до смены сцены.
+    GameData.current_map_node = current_node
+    GameData.map_nodes = map_nodes.duplicate(true)
+    GameData.map_connections = connections.duplicate(true)
     map_ui.update_map(map_nodes, connections, current_node)
 
     var kind := str(map_nodes[index]["kind"])
     if kind in ["battle", "elite", "boss"]:
-        GameData.current_map_node = index
         var error := get_tree().change_scene_to_file("res://scenes/battle.tscn")
         if error != OK:
             push_error("Не удалось открыть battle.tscn. Код ошибки: %d" % error)

@@ -13,6 +13,7 @@ func _run_tests() -> void:
     _test_block_reduces_damage()
     _test_hp_never_below_zero()
     _test_dead_enemy_does_not_attack()
+    _test_draw_refills_from_discard()
     print("=== ПРОВЕРКИ ЗАВЕРШЕНЫ ===\n")
     quit()
 
@@ -69,3 +70,40 @@ func _assert_equal(test_name: String, actual: int, expected: int) -> void:
         print("PASS: ", test_name)
     else:
         print("FAIL: ", test_name, " | ожидалось ", expected, ", получено ", actual)
+
+
+func _test_draw_refills_from_discard() -> void:
+    var manager := DeckManager.new()
+    root.add_child(manager)
+
+    var hand_ui := Control.new()
+    root.add_child(hand_ui)
+    manager.hand_container = hand_ui
+    manager.hand.clear()
+    manager.deck = [
+        {"id": "test_1", "name": "Тестовая карта 1"},
+        {"id": "test_2", "name": "Тестовая карта 2"}
+    ]
+    manager.discard = [
+        {"id": "test_3", "name": "Тестовая карта 3"},
+        {"id": "test_4", "name": "Тестовая карта 4"},
+        {"id": "test_5", "name": "Тестовая карта 5"},
+        {"id": "test_6", "name": "Тестовая карта 6"},
+        {"id": "test_7", "name": "Тестовая карта 7"}
+    ]
+
+    manager.draw_cards(5)
+
+    _assert_equal("Добор: в руке 5 карт", manager.hand.size(), 5)
+    _assert_equal("Добор: в колоде осталось 2 карты после перемешивания", manager.deck.size(), 2)
+    _assert_equal("Добор: сброс перемешан в колоду", manager.discard.size(), 0)
+
+    var unique_ids := {}
+    for card in manager.hand:
+        unique_ids[str(card["id"])] = true
+    for card in manager.deck:
+        unique_ids[str(card["id"])] = true
+    _assert_equal("Добор: все 7 карт сохранены без потерь", unique_ids.size(), 7)
+
+    manager.free()
+    hand_ui.free()
